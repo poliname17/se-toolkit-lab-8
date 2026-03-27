@@ -107,6 +107,11 @@ The LMS MCP server is provided in `mcp/mcp_lms/`. It exposes the backend API as 
 
 2. Add the MCP server to your repo-local nanobot config (`nanobot/config.json`). Check the [nanobot docs](https://github.com/HKUDS/nanobot) for how to configure MCP servers. It runs as a subprocess via `python -m mcp_lms`.
 
+   > [!NOTE]
+   > `python -m mcp_lms` works here because you start nanobot with `uv run`.
+   > The MCP subprocess inherits the same Python environment, so `python` resolves
+   > to the repo-local interpreter where `lms-mcp` is installed.
+
    > **Hint:** The MCP server needs the backend URL and backend API key. Set them as environment variables:
    > `NANOBOT_LMS_BACKEND_URL=http://localhost:42002`
    > `NANOBOT_LMS_API_KEY=...`
