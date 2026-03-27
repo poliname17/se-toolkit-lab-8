@@ -507,6 +507,10 @@ source = { editable = "mcp" }
 dependencies = [
     { name = "httpx" },
     { name = "mcp" },
+    { name = "opentelemetry-distro", extra = ["otlp"] },
+    { name = "opentelemetry-exporter-otlp-proto-grpc" },
+    { name = "opentelemetry-instrumentation-httpx" },
+    { name = "opentelemetry-instrumentation-logging" },
     { name = "pydantic" },
 ]
 
@@ -514,6 +518,10 @@ dependencies = [
 requires-dist = [
     { name = "httpx", specifier = ">=0.28.0,<1.0.0" },
     { name = "mcp", specifier = ">=1.26.0,<2.0.0" },
+    { name = "opentelemetry-distro", extras = ["otlp"], specifier = ">=0.51b0" },
+    { name = "opentelemetry-exporter-otlp-proto-grpc", specifier = ">=1.30.0" },
+    { name = "opentelemetry-instrumentation-httpx", specifier = ">=0.51b0" },
+    { name = "opentelemetry-instrumentation-logging", specifier = ">=0.51b0" },
     { name = "pydantic", specifier = ">=2.12.0,<3.0.0" },
 ]
 
