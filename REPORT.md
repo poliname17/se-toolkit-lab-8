@@ -178,7 +178,6 @@ backend-1  | INFO:     172.19.0.10:52106 - "GET /items/ HTTP/1.1" 404 Not Found
 ## Task 3B — Traces
 
 <!-- Screenshots: healthy trace span hierarchy, error trace -->
-![alt text](screenshots/image1.png)
 
 ## Task 3C — Observability MCP tools
 
