@@ -70,7 +70,7 @@ Would you like me to help you with a specific task or explore the lab documentat
 Here are the available labs in the LMS:                                                                                                                                        
 
                                                              
- ID  Lab Title                                               
+ ID  Lab Title                                             
  ─────────────────────────────────────────────────────────── 
  1   Lab 01 – Products, Architecture & Roles                 
  2   Lab 02 — Run, Fix, and Deploy a Backend Service         
@@ -93,10 +93,7 @@ Yes, the LMS backend is healthy!
 ## Task 1C — Skill prompt
 
 <!-- Paste the agent's response to "Show me the scores" (without specifying a lab) -->
-I'll help you check the scores. First, let me see what labs are available.                                                                                                     
-2026-03-31 18:00:05.190 | INFO     | nanobot.agent.loop:_prepare_tools:253 - Tool call: mcp_lms_lms_labs({})
 
-🐈 nanobot
 I can see there are 8 labs available. Which lab would you like to see the scores for? Here are the options:                                                                    
 
  1 Lab 01 – Products, Architecture & Roles                                                                                                                                     
@@ -110,7 +107,6 @@ I can see there are 8 labs available. Which lab would you like to see the scores
 
 Please let me know which lab you're interested in, or if you'd like to see scores for all labs.                                                                                
 
-2026-03-31 18:00:12.153 | INFO     | nanobot.agent.loop:_process_message:479 - Response to cli:user: I can see there are 8 labs available. Which lab would you like to see the scores for? Here are the options:
 ## Task 2A — Deployed agent
 
 <!-- Paste a short nanobot startup log excerpt showing the gateway started inside Docker -->
