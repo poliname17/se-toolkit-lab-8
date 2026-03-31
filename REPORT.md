@@ -141,6 +141,23 @@ nanobot-1  | 2026-03-31 18:58:13.814 | INFO     | nanobot.agent.loop:run:280 - A
 ## Task 2B — Web client
 
 <!-- Screenshot of a conversation with the agent in the Flutter web app -->
+No labs found. Let me trigger the LMS sync pipeline first as you requested.
+The sync pipeline is running (it may take a moment). Let me check for labs again:
+Great! The sync completed and now we have 8 labs available. Since you asked for scores, which lab would you like to see?
+The interactive UI isn't available on this channel. Let me present the options as text:
+
+**Which lab would you like to see scores for?**
+
+1. Lab 01 – Products, Architecture & Roles (`lab-01`)
+2. Lab 02 — Run, Fix, and Deploy a Backend Service (`lab-02`)
+3. Lab 03 — Backend API: Explore, Debug, Implement, Deploy (`lab-03`)
+4. Lab 04 — Testing, Front-end, and AI Agents (`lab-04`)
+5. Lab 05 — Data Pipeline and Analytics Dashboard (`lab-05`)
+6. Lab 06 — Build Your Own Agent (`lab-06`)
+7. Lab 07 — Build a Client with an AI Coding Agent (`lab-07`)
+8. lab-08 (`lab-08`)
+
+Just tell me which lab number or ID you'd like to see!
 ![alt text](screenshots/image.png)
 ## Task 3A — Structured logging
 
