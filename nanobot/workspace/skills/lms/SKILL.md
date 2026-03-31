@@ -104,5 +104,3 @@ User: Show completion rate for lab-99
 Assistant: [calls lms_completion_rate with lab="lab-99"]
 Assistant: No data available for lab-99. Would you like to see available labs?
 ```
-
-
