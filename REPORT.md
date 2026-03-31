@@ -163,9 +163,16 @@ Just tell me which lab number or ID you'd like to see!
 
 <!-- Paste happy-path and error-path log excerpts, VictoriaLogs query screenshot -->
 
+backend-1 | 2026-03-31 19:44:35,601 INFO [lms_backend.main] [main.py:62] [trace_id=79b9cb769ab05f29b629b4de5bcd0198 span_id=2b5e71670949512c resource.service.name=Learning Management Service trace_sampled=True] - request_started backend-1 | 2026-03-31 19:44:35,604 INFO [lms_backend.auth] [auth.py:30] [trace_id=79b9cb769ab05f29b629b4de5bcd0198 span_id=2b5e71670949512c resource.service.name=Learning Management Service trace_sampled=True] - auth_success backend-1 | 2026-03-31 19:44:35,616 INFO [lms_backend.main] [main.py:74] [trace_id=79b9cb769ab05f29b629b4de5bcd0198 span_id=2b5e71670949512c resource.service.name=Learning Management Service trace_sampled=True] - request_completed
+
+backend-1 | 2026-03-31 20:15:20,904 INFO [lms_backend.main] [main.py:62] [trace_id=e5068c0642f0bdd994ff3532bcf41977 span_id=376fb4e98f961ba2 resource.service.name=Learning Management Service trace_sampled=True] - request_started backend-1 | 2026-03-31 20:15:20,906 INFO [lms_backend.auth] [auth.py:30] [trace_id=e5068c0642f0bdd994ff3532bcf41977 span_id=376fb4e98f961ba2 resource.service.name=Learning Management Service trace_sampled=True] - auth_success backend-1 | 2026-03-31 20:15:20,906 INFO [lms_backend.db.items] [items.py:16] [trace_id=e5068c0642f0bdd994ff3532bcf41977 span_id=376fb4e98f961ba2 resource.service.name=Learning Management Service trace_sampled=True] - db_query backend-1 | 2026-03-31 20:15:20,909 ERROR [lms_backend.db.items] [items.py:23] [trace_id=e5068c0642f0bdd994ff3532bcf41977 span_id=376fb4e98f961ba2 resource.service.name=Learning Management Service trace_sampled=True] - db_query backend-1 | 2026-03-31 20:15:20,909 WARNING [lms_backend.routers.items] [items.py:23] [trace_id=e5068c0642f0bdd994ff3532bcf41977 span_id=376fb4e98f961ba2 resource.service.name=Learning Management Service trace_sampled=True] - items_list_failed_as_not_found backend-1 | 2026-03-31 20:15:20,910 INFO [lms_backend.main] [main.py:74] [trace_id=e5068c0642f0bdd994ff3532bcf41977 span_id=376fb4e98f961ba2 resource.service.name=Learning Management Service trace_sampled=True] - request_completed backend-1 | INFO: 172.19.0.10:52106 - "GET /items/ HTTP/1.1" 404 backend-1 | INFO: 172.19.0.10:52106 - "GET /items/ HTTP/1.1" 404 Not Found
+
 ## Task 3B — Traces
 
 <!-- Screenshots: healthy trace span hierarchy, error trace -->
+
+![alt text](screenshots/image1.png)
+
 
 ## Task 3C — Observability MCP tools
 
