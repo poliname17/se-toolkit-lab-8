@@ -141,7 +141,7 @@ nanobot-1  | 2026-03-31 18:58:13.814 | INFO     | nanobot.agent.loop:run:280 - A
 ## Task 2B — Web client
 
 <!-- Screenshot of a conversation with the agent in the Flutter web app -->
-
+![alt text](screenshots/image.png)
 ## Task 3A — Structured logging
 
 <!-- Paste happy-path and error-path log excerpts, VictoriaLogs query screenshot -->
