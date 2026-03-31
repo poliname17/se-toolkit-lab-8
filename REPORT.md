@@ -106,6 +106,38 @@ Please let me know which lab you're interested in, or I can show you pass rates,
 
 <!-- Paste a short nanobot startup log excerpt showing the gateway started inside Docker -->
 
+operator1@polinaVM2001:~/se-toolkit-lab-8$ docker compose --env-file .env.docker.secret logs nanobot --tail 30
+nanobot-1  | 
+nanobot-1  | 2026-03-31 18:57:38.361 | INFO     | nanobot.agent.loop:stop:387 - Agent loop stopping
+nanobot-1  | 2026-03-31 18:57:38.362 | INFO     | nanobot.channels.manager:stop_all:99 - Stopping all channels...
+nanobot-1  | 2026-03-31 18:57:38.362 | INFO     | nanobot.channels.manager:stop_all:113 - Stopped webchat channel
+nanobot-1  | Using config: /tmp/nanobot/config.resolved.json
+nanobot-1  | Using config: /tmp/nanobot/config.resolved.json
+nanobot-1  | 🐈 Starting nanobot gateway version 0.1.4.post5 on port 18790...
+nanobot-1  | 2026-03-31 18:58:09.564 | DEBUG    | nanobot.channels.registry:discover_all:64 - Skipping built-in channel 'matrix': Matrix dependencies not installed. Run: pip install nanobot-ai[matrix]
+nanobot-1  | 2026-03-31 18:58:09.998 | INFO     | nanobot.channels.manager:_init_channels:58 - WebChat channel enabled
+nanobot-1  | ✓ Channels enabled: webchat
+nanobot-1  | ✓ Heartbeat: every 1800s
+nanobot-1  | 2026-03-31 18:58:10.000 | INFO     | nanobot.cron.service:start:202 - Cron service started with 0 jobs
+nanobot-1  | 2026-03-31 18:58:10.000 | INFO     | nanobot.heartbeat.service:start:124 - Heartbeat started (every 1800s)
+nanobot-1  | 2026-03-31 18:58:10.349 | INFO     | nanobot.channels.manager:start_all:91 - Starting webchat channel...
+nanobot-1  | 2026-03-31 18:58:10.350 | INFO     | nanobot.channels.manager:_dispatch_outbound:119 - Outbound dispatcher started
+nanobot-1  | 2026-03-31 18:58:12.049 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_lms_lms_health' from server 'lms'
+nanobot-1  | 2026-03-31 18:58:12.049 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_lms_lms_labs' from server 'lms'
+nanobot-1  | 2026-03-31 18:58:12.049 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_lms_lms_learners' from server 'lms'
+nanobot-1  | 2026-03-31 18:58:12.049 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_lms_lms_pass_rates' from server 'lms'
+nanobot-1  | 2026-03-31 18:58:12.049 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_lms_lms_timeline' from server 'lms'
+nanobot-1  | 2026-03-31 18:58:12.049 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_lms_lms_groups' from server 'lms'
+nanobot-1  | 2026-03-31 18:58:12.049 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_lms_lms_top_learners' from server 'lms'
+nanobot-1  | 2026-03-31 18:58:12.049 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_lms_lms_completion_rate' from server 'lms'
+nanobot-1  | 2026-03-31 18:58:12.049 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_lms_lms_sync_pipeline' from server 'lms'
+nanobot-1  | 2026-03-31 18:58:12.049 | INFO     | nanobot.agent.tools.mcp:connect_mcp_servers:246 - MCP server 'lms': connected, 9 tools registered
+nanobot-1  | 2026-03-31 18:58:13.774 | DEBUG    | nanobot.agent.tools.mcp:connect_mcp_servers:226 - MCP: registered tool 'mcp_webchat_ui_message' from server 'webchat'
+nanobot-1  | 2026-03-31 18:58:13.774 | INFO     | nanobot.agent.tools.mcp:connect_mcp_servers:246 - MCP server 'webchat': connected, 1 tools registered
+nanobot-1  | /app/.venv/bin/python: No module named mcp_obs
+nanobot-1  | 2026-03-31 18:58:13.814 | ERROR    | nanobot.agent.tools.mcp:connect_mcp_servers:248 - MCP server 'obs': failed to connect: Connection closed
+nanobot-1  | 2026-03-31 18:58:13.814 | INFO     | nanobot.agent.loop:run:280 - Agent loop started
+
 ## Task 2B — Web client
 
 <!-- Screenshot of a conversation with the agent in the Flutter web app -->
