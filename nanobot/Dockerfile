@@ -71,7 +71,8 @@ COPY --from=builder --chown=appuser:appgroup /app /app
 # Create writable workspace directories for cron and other runtime data
 # Make them writable by any user since container may run as host UID
 RUN mkdir -p /app/nanobot/workspace/cron /app/nanobot/workspace/memory \
-    && chmod -R 777 /app/nanobot/workspace
+    && chown -R appuser:appgroup /app/nanobot/workspace \
+    && chmod -R 755 /app/nanobot/workspace
 
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
