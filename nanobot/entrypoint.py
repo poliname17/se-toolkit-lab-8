@@ -76,6 +76,20 @@ def main():
         },
     }
 
+    # Configure mcp_obs MCP server for observability tools
+    config["tools"]["mcpServers"]["obs"] = {
+        "command": "/app/.venv/bin/python",
+        "args": ["-m", "mcp_obs"],
+        "env": {
+            "VICTORIALOGS_URL": os.environ.get(
+                "NANOBOT_VICTORIALOGS_URL", "http://victorialogs:9428"
+            ),
+            "VICTORIATRACES_URL": os.environ.get(
+                "NANOBOT_VICTORIATRACES_URL", "http://victoriatraces:10428"
+            ),
+        },
+    }
+
     # Write resolved config
     with open(resolved_path, "w") as f:
         json.dump(config, f, indent=2)
