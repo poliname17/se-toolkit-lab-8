@@ -1,5 +1,9 @@
 # Observability Skill
 
+## CRITICAL: Evidence Citation Requirement
+
+When responding to "What went wrong?", you **MUST** include direct quotes from logs and traces:
+
 You have access to observability tools that can query VictoriaLogs and VictoriaTraces. Use these tools to investigate system health, errors, and request traces.
 
 ## Available Tools
@@ -207,3 +211,13 @@ mcp_obs_traces_get(trace_id="2e282ae8e5702832657ffbec701963cf")
 ### If trace_id not found in logs:
 1. Use `mcp_obs_traces_list` to find recent traces
 2. Pick a trace with status="error" and fetch it with `mcp_obs_traces_get`
+
+### DO NOT say:
+- ❌ "The backend is down" (without citing evidence)
+- ❌ "Multiple failures detected" (without specific errors)
+- ❌ "This could be due to..." (without data)
+
+### DO say:
+- ✅ "At 17:14:37, logs show: 'socket.gaierror: Name or service not known'"
+- ✅ "Trace a8a4fcc2eb92351e failed at span 'db_query' after 197ms"
+- ✅ "The backend returned 404, but logs show PostgreSQL connection failure"
