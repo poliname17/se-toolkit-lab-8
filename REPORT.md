@@ -228,7 +228,7 @@ Summary:
 
 The issue appears to be with the monitoring/observability infrastructure rather than the LMS itself. Would you like me to try a     
 different approach to investigate?                           
-
+ 
 ## Task 4A — Multi-step investigation
 
 <!-- Paste the agent's response to "What went wrong?" showing chained log + trace investigation -->
