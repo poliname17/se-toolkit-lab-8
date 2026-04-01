@@ -20,8 +20,8 @@
         "to": "3b619fda-7b5a-4b33-88b6-1a8a420661e8"
       },
       "state": {
-        "nextRunAtMs": 1775066775189,
-        "lastRunAtMs": 1775066628929,
+        "nextRunAtMs": 1775069007731,
+        "lastRunAtMs": 1775068856192,
         "lastStatus": "ok",
         "lastError": null,
         "runHistory": [
@@ -36,11 +36,149 @@
             "status": "ok",
             "durationMs": 26260,
             "error": null
+          },
+          {
+            "runAtMs": 1775066775191,
+            "status": "ok",
+            "durationMs": 21362,
+            "error": null
+          },
+          {
+            "runAtMs": 1775066916555,
+            "status": "ok",
+            "durationMs": 18082,
+            "error": null
+          },
+          {
+            "runAtMs": 1775067054638,
+            "status": "ok",
+            "durationMs": 16571,
+            "error": null
+          },
+          {
+            "runAtMs": 1775067191210,
+            "status": "ok",
+            "durationMs": 30935,
+            "error": null
+          },
+          {
+            "runAtMs": 1775067342147,
+            "status": "ok",
+            "durationMs": 21516,
+            "error": null
+          },
+          {
+            "runAtMs": 1775067483667,
+            "status": "ok",
+            "durationMs": 19096,
+            "error": null
+          },
+          {
+            "runAtMs": 1775067622766,
+            "status": "ok",
+            "durationMs": 22617,
+            "error": null
+          },
+          {
+            "runAtMs": 1775067765386,
+            "status": "ok",
+            "durationMs": 20068,
+            "error": null
+          },
+          {
+            "runAtMs": 1775067905456,
+            "status": "ok",
+            "durationMs": 37901,
+            "error": null
+          },
+          {
+            "runAtMs": 1775068087174,
+            "status": "ok",
+            "durationMs": 44604,
+            "error": null
+          },
+          {
+            "runAtMs": 1775068251780,
+            "status": "ok",
+            "durationMs": 34288,
+            "error": null
+          },
+          {
+            "runAtMs": 1775068406070,
+            "status": "ok",
+            "durationMs": 28670,
+            "error": null
+          },
+          {
+            "runAtMs": 1775068554743,
+            "status": "ok",
+            "durationMs": 26159,
+            "error": null
+          },
+          {
+            "runAtMs": 1775068700905,
+            "status": "ok",
+            "durationMs": 35286,
+            "error": null
+          },
+          {
+            "runAtMs": 1775068856192,
+            "status": "ok",
+            "durationMs": 31539,
+            "error": null
           }
         ]
       },
       "createdAtMs": 1775066347903,
-      "updatedAtMs": 1775066655189,
+      "updatedAtMs": 1775068887731,
+      "deleteAfterRun": false
+    },
+    {
+      "id": "531d65b0",
+      "name": "🔍 LMS Health Check Reminder: C",
+      "enabled": true,
+      "schedule": {
+        "kind": "every",
+        "atMs": null,
+        "everyMs": 120000,
+        "expr": null,
+        "tz": null
+      },
+      "payload": {
+        "kind": "agent_turn",
+        "message": "🔍 LMS Health Check Reminder: Check for recent backend errors and report status to this chat.",
+        "deliver": true,
+        "channel": "webchat",
+        "to": "baf2c37f-7b0a-4cdf-8bf4-470a508219b9"
+      },
+      "state": {
+        "nextRunAtMs": 1775069116285,
+        "lastRunAtMs": 1775068965846,
+        "lastStatus": "ok",
+        "lastError": null,
+        "runHistory": [
+          {
+            "runAtMs": 1775068666671,
+            "status": "ok",
+            "durationMs": 29112,
+            "error": null
+          },
+          {
+            "runAtMs": 1775068815784,
+            "status": "ok",
+            "durationMs": 30060,
+            "error": null
+          },
+          {
+            "runAtMs": 1775068965846,
+            "status": "ok",
+            "durationMs": 30439,
+            "error": null
+          }
+        ]
+      },
+      "createdAtMs": 1775068546669,
+      "updatedAtMs": 1775068996285,
       "deleteAfterRun": false
     }
   ]
