@@ -1062,14 +1062,18 @@ source = { virtual = "nanobot" }
 dependencies = [
     { name = "mcp-lms" },
     { name = "mcp-obs" },
+    { name = "mcp-webchat" },
     { name = "nanobot-ai" },
+    { name = "nanobot-webchat" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "mcp-lms", editable = "mcp/mcp-lms" },
     { name = "mcp-obs", editable = "mcp/mcp-obs" },
+    { name = "mcp-webchat", editable = "nanobot-websocket-channel/mcp-webchat" },
     { name = "nanobot-ai", url = "https://github.com/HKUDS/nanobot/archive/e7d371ec1e6531b28898ec2c869ef338e8dd46ec.zip" },
+    { name = "nanobot-webchat", editable = "nanobot-websocket-channel/nanobot-webchat" },
 ]
 
 [[package]]
