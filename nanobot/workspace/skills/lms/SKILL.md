@@ -1,126 +1,106 @@
-# Observability Skill
+---
+name: lms
+description: Use LMS MCP tools for live course data
+always: true
+---
 
-You have access to observability tools that can query VictoriaLogs and VictoriaTraces. Use these tools to investigate system health, errors, and request traces.
+# LMS Skill
+
+You have access to the LMS (Learning Management System) via MCP tools for live course data.
 
 ## Available Tools
 
-### Log Tools (VictoriaLogs)
+| Tool | Parameters | Description |
+|------|------------|-------------|
+| `lms_health` | none | Check if LMS backend is healthy |
+| `lms_labs` | none | List all available labs |
+| `lms_learners` | none | List all registered learners |
+| `lms_pass_rates` | `lab` (required) | Get pass rates with avg score and attempt count per task |
+| `lms_timeline` | `lab` (required) | Get submission timeline (date + count) |
+| `lms_groups` | `lab` (required) | Get group performance (avg score + student count) |
+| `lms_top_learners` | `lab` (required), `limit` (default: 5) | Get top learners by average score |
+| `lms_completion_rate` | `lab` (required) | Get completion rate (passed / total) |
+| `lms_sync_pipeline` | none | Trigger LMS sync pipeline |
 
-- **`mcp_obs_logs_search`** — Search logs using LogsQL queries
-  - Use for finding specific events, errors, or patterns
-  - Time range: use `start_time` and `end_time` in RFC3339 format (e.g., `2026-03-30T10:00:00Z`)
-  - Default limit: 100 entries
-  - Example query: `service.name:"Learning Management Service" severity:ERROR`
+## Strategy
 
-- **`mcp_obs_logs_error_count`** — Count errors per service
-  - Use as first step when asked about errors
-  - Returns count grouped by service
-  - Default time window: 1 hour
+### When lab parameter is needed
 
-### Trace Tools (VictoriaTraces)
+Tools requiring a `lab` parameter: `lms_pass_rates`, `lms_timeline`, `lms_groups`, `lms_top_learners`, `lms_completion_rate`.
 
-- **`mcp_obs_traces_list`** — List recent traces for a service
-  - Returns trace summaries with: trace_id, duration, span_count, status (ok/error)
-  - Default service: "Learning Management Service"
-  - Use to find traces to investigate
+**Rule:** If the user asks for scores, pass rates, completion, groups, timeline, or top learners **without naming a lab**:
 
-- **`mcp_obs_traces_get`** — Get full trace details by ID
-  - Returns complete span hierarchy with errors highlighted
-  - Use after finding a trace_id from logs_search or traces_list
+1. Call `lms_labs` first to get available labs
+2. If multiple labs exist, ask the user to choose one
+3. Use the shared structured-ui skill to present the choice (it will handle display on supported channels)
+4. Pass the selected lab value to the requested tool
 
-## Investigation Flow for "What went wrong?" or "Check system health"
+### Lab labels
 
-When the user asks about errors, failures, or system health, follow this exact flow:
+- Use each lab's `title` field as the default user-facing label
+- If the tool output provides a better identifier (e.g., `lab_id`), use that as the value passed back
+- Present labs in a clear, readable format
 
-### Step 1: Check error count (fresh window)
-Start with `logs_error_count` using a **fresh, narrow time window** (last 10-15 minutes):
-```
-logs_error_count(service="Learning Management Service", hours=0.25)
-```
-This tells you which services have recent errors.
+### Formatting results
 
-### Step 2: Search error logs for the affected service
-Use `logs_search` to find specific error logs:
-```
-logs_search(query='service.name:"Learning Management Service" severity:ERROR', limit=20)
-```
-Look for:
-- Error messages (exception.message, db.statement)
-- `trace_id` fields in the log entries
+- **Percentages:** Format as `XX.X%` (e.g., `75.5%`)
+- **Counts:** Use plain integers with optional thousand separators
+- **Scores:** Show with 1-2 decimal places
+- **Dates:** Use `YYYY-MM-DD` format
+- **Tables:** Format tabular data aligned for readability
 
-### Step 3: Fetch the matching trace
-If you found a `trace_id` in the logs, use `traces_get`:
-```
-traces_get(trace_id="<trace_id_from_logs>")
-```
-This shows the full request flow and where it failed.
+### Response style
 
-### Step 4: Summarize findings (combine log + trace evidence)
-Write a **single coherent investigation** that includes:
-- **What the logs show**: error messages, affected service, timestamp
-- **What the trace shows**: failing operation, duration, root cause
-- **The discrepancy (if any)**: e.g., "Logs show PostgreSQL connection failure, but HTTP response was 404 instead of 500"
+- Keep responses **concise** — lead with the key finding
+- Include only relevant numbers; omit empty fields
+- If data is empty or unavailable, say so clearly
+- Offer follow-up actions when appropriate (e.g., "Would you like to see the timeline for this lab?")
 
-## Response Guidelines
+### When asked "what can you do?"
 
-### For "What went wrong?" investigations:
+Explain your LMS capabilities clearly:
 
-Your response MUST include:
-1. **Log evidence**: Quote at least one error message from logs
-2. **Trace evidence**: Name the failing operation from the trace
-3. **Affected service**: Explicitly name the service (e.g., "Learning Management Service")
-4. **Root cause**: Explain what actually failed (e.g., "PostgreSQL hostname resolution failed")
-5. **Discrepancy (if applicable)**: Note any mismatch between actual error and reported status
-
-### Example good response:
-> "I found 5 errors in the Learning Management Service in the last 10 minutes.
+> I can access live course data from the LMS, including:
+> - List available labs and learners
+> - Show pass rates, completion rates, and group performance for a specific lab
+> - Display submission timelines and top learners
+> - Trigger data sync
 >
-> **Log evidence**: Errors show 'socket.gaierror: [Errno -2] Name or service not known' when trying to connect to PostgreSQL at host 'postgres:5432'.
->
-> **Trace evidence**: Trace `2e282ae8e5702832657ffbec701963cf` shows the `connect` span failed after 197ms with `error: true`. The root operation was a SQLAlchemy connection attempt.
->
-> **Discrepancy**: The backend returned HTTP 404 'Items not found', but the real issue is PostgreSQL being unavailable (connection failure, not missing data). This is a misreported error — should be 503 Service Unavailable.
->
-> **Root cause**: PostgreSQL service is down or unreachable."
+> Just tell me which lab you're interested in, or ask me to show available labs first.
 
-### For general health checks:
+## Example Flows
 
-> "System health check for the last hour:
-> - Learning Management Service: 0 errors
-> - All traces show status 'ok'
-> - No issues detected."
+### Flow 1: User asks for pass rates without specifying lab
 
-## Query Examples
-
-### Find LMS backend errors in the last 10 minutes:
 ```
-logs_error_count(service="Learning Management Service", hours=0.17)
+User: What are the pass rates?
+Assistant: [calls lms_labs]
+Assistant: Which lab would you like to see pass rates for?
+  - Lab 04: Introduction to Testing
+  - Lab 05: Advanced Patterns
+  [presents choices via structured-ui]
+User: [selects Lab 04]
+Assistant: [calls lms_pass_rates with lab="lab-04"]
+Assistant: Pass rates for Lab 04:
+  - Task 1: 85% pass rate, avg score 7.2/10, 120 attempts
+  - Task 2: 72% pass rate, avg score 6.8/10, 98 attempts
 ```
 
-### Search for specific error pattern:
+### Flow 2: User asks for top learners with specific lab
+
 ```
-logs_search(query='service.name:"Learning Management Service" severity:ERROR', limit=50, start_time="2026-03-30T15:00:00Z")
+User: Show top 10 learners for lab-05
+Assistant: [calls lms_top_learners with lab="lab-05", limit=10]
+Assistant: Top 10 learners for Lab 05:
+  1. Alice Chen — 94.5%
+  2. Bob Smith — 91.2%
+  ...
 ```
 
-### Find traces with errors:
+### Flow 3: Data unavailable
+
 ```
-traces_list(service="Learning Management Service", limit=20)
-# Then fetch traces with status="error"
-traces_get(trace_id="<trace_id_from_list>")
+User: Show completion rate for lab-99
+Assistant: [calls lms_completion_rate with lab="lab-99"]
+Assistant: No data available for lab-99. Would you like to see available labs?
 ```
-
-## Common Error Patterns
-
-| Error message | Likely cause |
-|--------------|--------------|
-| `Name or service not known` | Service discovery failure (target service down) |
-| `Connection refused` | Service running but port not accessible |
-| `Connection timeout` | Network issue or overloaded service |
-| `db_query failed` | Database connection or query error |
-
-## What NOT to do
-
-- ❌ Don't dump raw JSON responses
-- ❌ Don't skip the trace investigation if trace_id is available
-- ❌ Don't report old errors (use fresh time windows)
-- ❌ Don't give generic answers without citing specific log/trace evidence
