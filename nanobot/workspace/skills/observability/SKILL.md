@@ -1,95 +1,126 @@
----
-name: observability
-description: Use observability tools to search logs and traces for errors and debugging
-always: true
----
-
 # Observability Skill
 
-You have access to observability tools that can search logs and traces from VictoriaLogs and VictoriaTraces.
+You have access to observability tools that can query VictoriaLogs and VictoriaTraces. Use these tools to investigate system health, errors, and request traces.
 
 ## Available Tools
 
-### Log Tools
-- `mcp_obs_logs_search` - Search logs using LogsQL queries
-- `mcp_obs_logs_error_count` - Count errors for a service over a time window
+### Log Tools (VictoriaLogs)
 
-### Trace Tools
-- `mcp_obs_traces_list` - List recent traces for a service
-- `mcp_obs_traces_get` - Get full details of a specific trace by ID
+- **`mcp_obs_logs_search`** — Search logs using LogsQL queries
+  - Use for finding specific events, errors, or patterns
+  - Time range: use `start_time` and `end_time` in RFC3339 format (e.g., `2026-03-30T10:00:00Z`)
+  - Default limit: 100 entries
+  - Example query: `service.name:"Learning Management Service" severity:ERROR`
 
-## When to Use These Tools
+- **`mcp_obs_logs_error_count`** — Count errors per service
+  - Use as first step when asked about errors
+  - Returns count grouped by service
+  - Default time window: 1 hour
 
-Use observability tools when the user asks about:
-- Errors, failures, or issues in the system
-- What went wrong with a request
-- System health or status
-- Debugging a problem
-- Recent activity in a service
+### Trace Tools (VictoriaTraces)
 
-## Strategy for Error Investigation
+- **`mcp_obs_traces_list`** — List recent traces for a service
+  - Returns trace summaries with: trace_id, duration, span_count, status (ok/error)
+  - Default service: "Learning Management Service"
+  - Use to find traces to investigate
 
-When the user asks about errors (e.g., "Any errors in the last hour?"):
+- **`mcp_obs_traces_get`** — Get full trace details by ID
+  - Returns complete span hierarchy with errors highlighted
+  - Use after finding a trace_id from logs_search or traces_list
 
-1. **First**, use `mcp_obs_logs_error_count` with:
-   - `service`: "Learning Management Service" (or the service the user asks about)
-   - `time_range`: Use the time range the user mentioned, or default to "10m" for recent issues
+## Investigation Flow for "What went wrong?" or "Check system health"
 
-2. **If errors are found**, use `mcp_obs_logs_search` to see the actual error messages:
-   - `query`: 'service.name:"Learning Management Service" severity:ERROR'
-   - `time_range`: Same as step 1
-   - `limit`: 10-20 entries is usually enough
+When the user asks about errors, failures, or system health, follow this exact flow:
 
-3. **Look for trace_id** in the log entries. If you find one, use `mcp_obs_traces_get` to see the full request flow and where it failed.
+### Step 1: Check error count (fresh window)
+Start with `logs_error_count` using a **fresh, narrow time window** (last 10-15 minutes):
+```
+logs_error_count(service="Learning Management Service", hours=0.25)
+```
+This tells you which services have recent errors.
 
-4. **Summarize findings** concisely:
-   - How many errors occurred
-   - What the errors were (brief description)
-   - What component failed (from trace spans)
-   - Any patterns you notice
+### Step 2: Search error logs for the affected service
+Use `logs_search` to find specific error logs:
+```
+logs_search(query='service.name:"Learning Management Service" severity:ERROR', limit=20)
+```
+Look for:
+- Error messages (exception.message, db.statement)
+- `trace_id` fields in the log entries
 
-## Strategy for Trace Investigation
+### Step 3: Fetch the matching trace
+If you found a `trace_id` in the logs, use `traces_get`:
+```
+traces_get(trace_id="<trace_id_from_logs>")
+```
+This shows the full request flow and where it failed.
 
-When you have a specific trace_id (from logs or user input):
+### Step 4: Summarize findings (combine log + trace evidence)
+Write a **single coherent investigation** that includes:
+- **What the logs show**: error messages, affected service, timestamp
+- **What the trace shows**: failing operation, duration, root cause
+- **The discrepancy (if any)**: e.g., "Logs show PostgreSQL connection failure, but HTTP response was 404 instead of 500"
 
-1. Use `mcp_obs_traces_get` with the trace_id
-2. Look at the span hierarchy to understand the request flow
-3. Identify which span has the error (marked with ⚠️ ERROR)
-4. Explain what went wrong in plain language
+## Response Guidelines
 
-## Response Format
+### For "What went wrong?" investigations:
 
-- Keep responses concise and focused on the user's question
-- Don't dump raw JSON - summarize the findings
-- Include relevant details like timestamps, error messages, and affected components
-- If no errors are found, say so clearly
+Your response MUST include:
+1. **Log evidence**: Quote at least one error message from logs
+2. **Trace evidence**: Name the failing operation from the trace
+3. **Affected service**: Explicitly name the service (e.g., "Learning Management Service")
+4. **Root cause**: Explain what actually failed (e.g., "PostgreSQL hostname resolution failed")
+5. **Discrepancy (if applicable)**: Note any mismatch between actual error and reported status
 
-## Examples
+### Example good response:
+> "I found 5 errors in the Learning Management Service in the last 10 minutes.
+>
+> **Log evidence**: Errors show 'socket.gaierror: [Errno -2] Name or service not known' when trying to connect to PostgreSQL at host 'postgres:5432'.
+>
+> **Trace evidence**: Trace `2e282ae8e5702832657ffbec701963cf` shows the `connect` span failed after 197ms with `error: true`. The root operation was a SQLAlchemy connection attempt.
+>
+> **Discrepancy**: The backend returned HTTP 404 'Items not found', but the real issue is PostgreSQL being unavailable (connection failure, not missing data). This is a misreported error — should be 503 Service Unavailable.
+>
+> **Root cause**: PostgreSQL service is down or unreachable."
 
-**User**: "Any errors in the last hour?"
+### For general health checks:
 
-**You should**:
-1. Call `mcp_obs_logs_error_count` with time_range="1h"
-2. If count > 0, call `mcp_obs_logs_search` to see details
-3. Summarize: "Found X errors in the last hour. The errors were: [brief description]"
+> "System health check for the last hour:
+> - Learning Management Service: 0 errors
+> - All traces show status 'ok'
+> - No issues detected."
 
-**User**: "What went wrong with request abc123?"
+## Query Examples
 
-**You should**:
-1. Call `mcp_obs_traces_get` with trace_id="abc123"
-2. Look for spans with errors
-3. Explain: "The request failed at [component] because [reason]"
+### Find LMS backend errors in the last 10 minutes:
+```
+logs_error_count(service="Learning Management Service", hours=0.17)
+```
 
-**User**: "Is the backend healthy?"
+### Search for specific error pattern:
+```
+logs_search(query='service.name:"Learning Management Service" severity:ERROR', limit=50, start_time="2026-03-30T15:00:00Z")
+```
 
-**You should**:
-1. Call `mcp_obs_logs_error_count` with service="Learning Management Service" and time_range="10m"
-2. If no errors: "The backend appears healthy - no errors in the last 10 minutes"
-3. If errors: Report them and offer to investigate further
+### Find traces with errors:
+```
+traces_list(service="Learning Management Service", limit=20)
+# Then fetch traces with status="error"
+traces_get(trace_id="<trace_id_from_list>")
+```
 
-## Important Notes
+## Common Error Patterns
 
-- Always specify the service name when querying - "Learning Management Service" for the LMS backend
-- Use narrow time ranges (10m, 1h) for recent issues, wider ranges (1d) for historical analysis
-- If a tool fails, try again or explain the limitation to the user
-- When in doubt, start with `logs_error_count` to get a quick overview before diving into details
+| Error message | Likely cause |
+|--------------|--------------|
+| `Name or service not known` | Service discovery failure (target service down) |
+| `Connection refused` | Service running but port not accessible |
+| `Connection timeout` | Network issue or overloaded service |
+| `db_query failed` | Database connection or query error |
+
+## What NOT to do
+
+- ❌ Don't dump raw JSON responses
+- ❌ Don't skip the trace investigation if trace_id is available
+- ❌ Don't report old errors (use fresh time windows)
+- ❌ Don't give generic answers without citing specific log/trace evidence
